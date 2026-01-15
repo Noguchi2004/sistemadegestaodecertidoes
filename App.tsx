@@ -25,9 +25,6 @@ const fetchData = async () => {
     const data = await certificateService.getAll();
 
     const arrayData = Array.isArray(data) ? data : [];
-    arrayData.slice(0, 10).forEach((c, i) => {
-      console.log(`statusNovoVenc[${i}] =`, (c as any).statusNovoVenc);
-    });
 
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
@@ -41,10 +38,10 @@ const fetchData = async () => {
 
     const normalized = arrayData.map(c => ({
       ...c,
-      // usa exatamente a coluna statusNovoVenc da planilha
       statusNovoVenc: normalizeStatus((c as any).statusNovoVenc),
     }));
 
+    console.log('exemplo status:', normalized[0]?.statusNovoVenc); // <= AQUI
     setCertificates(normalized);
   } catch (error) {
     console.error('Failed to fetch data', error);
@@ -96,13 +93,12 @@ const fetchData = async () => {
   // Derived State: Filtered List & Stats
  const filteredCertificates = useMemo(() => {
   return certificates.filter(cert => {
-    if (statusFilter !== 'ALL') {
-      const value = String(cert.statusNovoVenc).toUpperCase();
-      if (statusFilter === Status.NO_PRAZO && !value.includes('NO PRAZO')) return false;
-      if (statusFilter === Status.A_RENOVAR && !value.includes('A RENOVAR')) return false;
-      if (statusFilter === Status.VENCIDO && !value.includes('VENCIDO')) return false;
+    // filtro por status (card)
+    if (statusFilter !== 'ALL' && cert.statusNovoVenc !== statusFilter) {
+      return false;
     }
 
+    // filtro de busca
     const searchLower = searchTerm.toLowerCase();
     return (
       cert.empresa.toLowerCase().includes(searchLower) ||
