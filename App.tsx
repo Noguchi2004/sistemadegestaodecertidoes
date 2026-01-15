@@ -25,25 +25,21 @@ const fetchData = async () => {
     const data = await certificateService.getAll();
 
     const arrayData = Array.isArray(data) ? data : [];
-    arrayData.slice(0, 5).forEach((c, i) => {
-      console.log(`raw[${i}] =`, c);
-    });
 
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
-      console.log('normalizing:', raw, '->', value);
 
       if (value.includes('NO PRAZO')) return Status.NO_PRAZO;
       if (value.includes('A RENOVAR')) return Status.A_RENOVAR;
       if (value.includes('VENCIDO')) return Status.VENCIDO;
 
-      console.warn('status desconhecido:', raw);
       return Status.NO_PRAZO;
     };
 
     const normalized = arrayData.map(c => ({
       ...c,
-      statusNovoVenc: normalizeStatus(c.statusNovoVenc as string),
+      // usa exatamente a coluna statusNovoVenc da planilha
+      statusNovoVenc: normalizeStatus((c as any).statusNovoVenc),
     }));
 
     setCertificates(normalized);
