@@ -18,16 +18,19 @@ function App() {
 
   // Fetch Data
   const fetchData = async () => {
-    setLoading(true);
-    try {
-      const data = await certificateService.getAll();
-      setCertificates(data);
-    } catch (error) {
-      console.error("Failed to fetch data", error);
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const data = await certificateService.getAll();
+    // Garante que certificates seja sempre um array
+    setCertificates(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.error("Failed to fetch data", error);
+    setCertificates([]); // evita quebrar o filter
+  } finally {
+    setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchData();
