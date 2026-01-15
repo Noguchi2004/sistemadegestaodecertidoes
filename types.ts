@@ -5,7 +5,6 @@ export enum Status {
 }
 
 export interface Certificate {
-  id: string; // Unique ID for frontend handling
   empresa: string;
   cnpj: string;
   email: string;
