@@ -25,10 +25,13 @@ const fetchData = async () => {
 
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
-      if (value === 'NO PRAZO') return Status.NO_PRAZO;
-      if (value === 'A RENOVAR') return Status.A_RENOVAR;
-      if (value === 'VENCIDO') return Status.VENCIDO;
-      // fallback: se vier qualquer outra coisa, considera NO PRAZO
+      console.log('normalizing:', raw, '->', value);
+
+      if (value.includes('NO PRAZO')) return Status.NO_PRAZO;
+      if (value.includes('A RENOVAR')) return Status.A_RENOVAR;
+      if (value.includes('VENCIDO')) return Status.VENCIDO;
+
+      console.warn('status desconhecido:', raw);
       return Status.NO_PRAZO;
     };
 
