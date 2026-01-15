@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardStats } from '../types';
+import { DashboardStats, Status } from '../types';
 import { AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
 interface Props {
