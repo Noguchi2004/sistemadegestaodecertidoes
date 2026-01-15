@@ -25,6 +25,9 @@ const fetchData = async () => {
     const data = await certificateService.getAll();
 
     const arrayData = Array.isArray(data) ? data : [];
+    arrayData.slice(0, 10).forEach((c, i) => {
+      console.log(`statusNovoVenc[${i}] =`, (c as any).statusNovoVenc);
+    });
 
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
@@ -91,14 +94,15 @@ const fetchData = async () => {
   };
 
   // Derived State: Filtered List & Stats
-  const filteredCertificates = useMemo(() => {
+ const filteredCertificates = useMemo(() => {
   return certificates.filter(cert => {
-    // 1) filtro por status (card clicado)
-    if (statusFilter !== 'ALL' && cert.statusNovoVenc !== statusFilter) {
-      return false;
+    if (statusFilter !== 'ALL') {
+      const value = String(cert.statusNovoVenc).toUpperCase();
+      if (statusFilter === Status.NO_PRAZO && !value.includes('NO PRAZO')) return false;
+      if (statusFilter === Status.A_RENOVAR && !value.includes('A RENOVAR')) return false;
+      if (statusFilter === Status.VENCIDO && !value.includes('VENCIDO')) return false;
     }
 
-    // 2) filtro de busca
     const searchLower = searchTerm.toLowerCase();
     return (
       cert.empresa.toLowerCase().includes(searchLower) ||
