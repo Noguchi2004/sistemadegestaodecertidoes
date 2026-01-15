@@ -107,8 +107,12 @@ function App() {
       <main className="flex-1 p-6 max-w-[1600px] mx-auto w-full">
         
         {/* Dashboard Stats */}
-        <SummaryCards stats={stats} />
-
+        <SummaryCards 
+        stats={stats} 
+        currentFilter={statusFilter}
+        onFilterChange={setStatusFilter}
+      />
+    
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div className="relative w-full md:w-96">
