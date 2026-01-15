@@ -18,21 +18,17 @@ function App() {
   const [currentCertificate, setCurrentCertificate] = useState<Certificate | null>(null);
 
   // Fetch Data
-const fetchData = async () => {
-  setLoading(true);
-  try {
+// Fetch Data
 const fetchData = async () => {
   setLoading(true);
   try {
     const data = await certificateService.getAll();
 
-    // 1) garante array e mostra alguns status no console
     const arrayData = Array.isArray(data) ? data : [];
     arrayData.slice(0, 10).forEach((c, i) => {
       console.log(`raw[${i}] statusNovoVenc =`, c.statusNovoVenc);
     });
 
-    // 2) função de normalização (pode deixar a que já está usando)
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
       console.log('normalizing:', raw, '->', value);
