@@ -22,16 +22,29 @@ const fetchData = async () => {
   setLoading(true);
   try {
     const data = await certificateService.getAll();
-    console.log('certificates exemplo', data[0]); // vê o statusNovoVenc
-    setCertificates(Array.isArray(data) ? data : []);
+
+    const normalizeStatus = (raw: string | Status): Status => {
+      const value = String(raw).trim().toUpperCase();
+      if (value === 'NO PRAZO') return Status.NO_PRAZO;
+      if (value === 'A RENOVAR') return Status.A_RENOVAR;
+      if (value === 'VENCIDO') return Status.VENCIDO;
+      // fallback: se vier qualquer outra coisa, considera NO PRAZO
+      return Status.NO_PRAZO;
+    };
+
+    const normalized = (Array.isArray(data) ? data : []).map(c => ({
+      ...c,
+      statusNovoVenc: normalizeStatus(c.statusNovoVenc as string),
+    }));
+
+    setCertificates(normalized);
   } catch (error) {
-    console.error("Failed to fetch data", error);
+    console.error('Failed to fetch data', error);
     setCertificates([]);
   } finally {
     setLoading(false);
   }
 };
-
 
   useEffect(() => {
     fetchData();
