@@ -21,8 +21,18 @@ function App() {
 const fetchData = async () => {
   setLoading(true);
   try {
+const fetchData = async () => {
+  setLoading(true);
+  try {
     const data = await certificateService.getAll();
 
+    // 1) garante array e mostra alguns status no console
+    const arrayData = Array.isArray(data) ? data : [];
+    arrayData.slice(0, 10).forEach((c, i) => {
+      console.log(`raw[${i}] statusNovoVenc =`, c.statusNovoVenc);
+    });
+
+    // 2) função de normalização (pode deixar a que já está usando)
     const normalizeStatus = (raw: string | Status): Status => {
       const value = String(raw).trim().toUpperCase();
       console.log('normalizing:', raw, '->', value);
@@ -35,7 +45,7 @@ const fetchData = async () => {
       return Status.NO_PRAZO;
     };
 
-    const normalized = (Array.isArray(data) ? data : []).map(c => ({
+    const normalized = arrayData.map(c => ({
       ...c,
       statusNovoVenc: normalizeStatus(c.statusNovoVenc as string),
     }));
