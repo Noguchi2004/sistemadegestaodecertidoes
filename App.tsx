@@ -18,19 +18,19 @@ function App() {
   const [currentCertificate, setCurrentCertificate] = useState<Certificate | null>(null);
 
   // Fetch Data
-  const fetchData = async () => {
+const fetchData = async () => {
   setLoading(true);
   try {
     const data = await certificateService.getAll();
-    // Garante que certificates seja sempre um array
+    console.log('certificates exemplo', data[0]); // vê o statusNovoVenc
     setCertificates(Array.isArray(data) ? data : []);
   } catch (error) {
     console.error("Failed to fetch data", error);
-    setCertificates([]); // evita quebrar o filter
+    setCertificates([]);
   } finally {
     setLoading(false);
-    }
-  };
+  }
+};
 
 
   useEffect(() => {
