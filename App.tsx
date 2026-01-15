@@ -25,8 +25,8 @@ const fetchData = async () => {
     const data = await certificateService.getAll();
 
     const arrayData = Array.isArray(data) ? data : [];
-    arrayData.slice(0, 10).forEach((c, i) => {
-      console.log(`raw[${i}] statusNovoVenc =`, c.statusNovoVenc);
+    arrayData.slice(0, 5).forEach((c, i) => {
+      console.log(`raw[${i}] =`, c);
     });
 
     const normalizeStatus = (raw: string | Status): Status => {
