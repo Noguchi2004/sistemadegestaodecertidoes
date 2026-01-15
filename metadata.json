@@ -1,0 +1,5 @@
+{
+  "name": "Gestão de Certidões",
+  "description": "Sistema de controle de vencimentos de certidões integrado com Google Sheets.",
+  "requestFramePermissions": []
+}
