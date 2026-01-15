@@ -11,6 +11,7 @@ function App() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<Status | 'ALL'>('ALL');
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,16 +74,22 @@ function App() {
 
   // Derived State: Filtered List & Stats
   const filteredCertificates = useMemo(() => {
-    return certificates.filter(cert => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        cert.empresa.toLowerCase().includes(searchLower) ||
-        cert.cnpj.includes(searchTerm) ||
-        cert.tipoDocumento.toLowerCase().includes(searchLower) ||
-        cert.orgao.toLowerCase().includes(searchLower)
-      );
-    });
-  }, [certificates, searchTerm]);
+  return certificates.filter(cert => {
+    // 1) filtro por status (card clicado)
+    if (statusFilter !== 'ALL' && cert.statusNovoVenc !== statusFilter) {
+      return false;
+    }
+
+    // 2) filtro de busca
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      cert.empresa.toLowerCase().includes(searchLower) ||
+      cert.cnpj.includes(searchTerm) ||
+      cert.tipoDocumento.toLowerCase().includes(searchLower) ||
+      cert.orgao.toLowerCase().includes(searchLower)
+    );
+  });
+}, [certificates, searchTerm, statusFilter]);
 
   const stats: DashboardStats = useMemo(() => {
     return {
